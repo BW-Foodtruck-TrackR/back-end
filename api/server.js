@@ -9,8 +9,10 @@ server.use(express.json());
 server.use(cors());
 
 server.get("/", (req, res) => {
-    req.statusCode(200).json({
+    res.status(200).json({
         Message:
             "Congrats on loading up the home slash of the server. If you are a developer, you may be looking for /api/trucks",
     });
 });
+
+module.exports = server;

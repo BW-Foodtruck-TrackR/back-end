@@ -5,6 +5,12 @@ const randomConsts = require("../../config/randomConsts");
 
 const db = require("../allModel/allModel");
 
+function isValid(user) {
+    return Boolean(
+        user.username && user.password && typeof user.password === "string"
+    );
+}
+
 router.post("/register", (req, res) => {
     const { username, password, userOrOperator } = req.body;
 
@@ -21,28 +27,33 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
     const { username, password } = req.body;
 
-    //  verify user password
-    db.findByUser({ username })
-        .then(([user]) => {
-            console.log(user);
-            req.session.user = { user };
-            if (user && bcryptjs.compareSync(password, user.password)) {
-                const token = createToken(user);
-                res.status(200).json({
-                    user,
-                    session: req.session,
-                    token: token,
-                });
-            } else
-                res.status(401).json({
-                    Error:
-                        "The username and password combination was not found in our database.",
-                });
-        })
-        .catch((err) => {
-            // console.log(err);
-            res.status(500).json(err);
+    if (isValid(req.body)) {
+        db.findByUser({ username: username })
+            .then(([user]) => {
+                // compare the password the hash stored in the database
+                console.log(user);
+                if (user && bcryptjs.compareSync(password, user.password)) {
+                    const token = createToken(user);
+
+                    res.status(200).json({
+                        token,
+                        message: "Welcome to our API",
+                        session: req.session,
+                        user: user,
+                    });
+                } else {
+                    res.status(401).json({ message: "Invalid credentials" });
+                }
+            })
+            .catch((error) => {
+                res.status(500).json({ message: error.message });
+            });
+    } else {
+        res.status(400).json({
+            message:
+                "please provide username and password and the password shoud be alphanumeric",
         });
+    }
 });
 
 router.get("/logout", (req, res) => {
@@ -59,14 +70,13 @@ router.get("/logout", (req, res) => {
         req.status(204).end();
     }
 });
-
 function createToken(user) {
     const payload = {
         subject: user.id,
         username: user.username,
         userType: user.userOrOperator,
     };
-    const secret = consts.jwtSecret;
+    const secret = randomConsts.jwtSecret;
     const options = {
         expiresIn: "30m",
     };

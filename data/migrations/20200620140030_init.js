@@ -14,7 +14,6 @@ exports.up = function (knex) {
                 .references("userType.id")
                 .onDelete("RESTRICT")
                 .onUpdate("CASCADE");
-
             tbl.integer("favoriteTrucks")
                 .unsigned()
                 .references("TruckOperators.id")
@@ -25,12 +24,23 @@ exports.up = function (knex) {
             tbl.increments();
             tbl.string("username", 128).notNullable().unique().index();
             tbl.string("password", 256).notNullable();
-            tbl.string("trucksOwned").index();
+            tbl.string("trucksOwned")
+                .index()
+                .unsigned()
+                .references("TruckOperators.id")
+                .onDelete("RESTRICT")
+                .onUpdate("CASCADE");
+            tbl.integer("userOrOperator")
+                .unsigned()
+                .references("userType.id")
+                .onDelete("RESTRICT")
+                .onUpdate("CASCADE");
         });
 };
 
 exports.down = function (knex) {
     return knex.schema
         .dropTableIfExists("TruckOperators")
-        .dropTableIfExists("Users");
+        .dropTableIfExists("Users")
+        .dropTableIfExists("userType");
 };

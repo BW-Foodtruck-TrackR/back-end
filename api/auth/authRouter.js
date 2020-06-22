@@ -11,7 +11,7 @@ router.post("/register", (req, res) => {
     //  hash user password
     const rounds = process.env.HASH_ROUNDS || 8;
     const hash = bcryptjs.hashSync(password, rounds);
-    Users.add({ username, password: hash })
+    db.addUser({ username, password: hash })
         .then((users) => {
             res.status(200).json(users);
         })
@@ -22,7 +22,7 @@ router.post("/login", (req, res) => {
     const { username, password } = req.body;
 
     //  verify user password
-    Users.findBy({ username })
+    Users.findByUsername({ username })
         .then(([user]) => {
             console.log(user);
             req.session.user = { user };
@@ -64,7 +64,7 @@ function createToken(user) {
     const payload = {
         subject: user.id,
         username: user.username,
-        description: user.description,
+        userType: user.userOrOperator,
     };
     const secret = consts.jwtSecret;
     const options = {

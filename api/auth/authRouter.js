@@ -6,12 +6,12 @@ const randomConsts = require("../../config/randomConsts");
 const db = require("../allModel/allModel");
 
 router.post("/register", (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, userOrOperator } = req.body;
 
     //  hash user password
     const rounds = process.env.HASH_ROUNDS || 8;
     const hash = bcryptjs.hashSync(password, rounds);
-    db.addUser({ username, password: hash })
+    db.addUser({ username, password: hash, userOrOperator })
         .then((users) => {
             res.status(200).json(users);
         })
@@ -22,7 +22,7 @@ router.post("/login", (req, res) => {
     const { username, password } = req.body;
 
     //  verify user password
-    Users.findByUsername({ username })
+    Users.findByUser({ username })
         .then(([user]) => {
             console.log(user);
             req.session.user = { user };

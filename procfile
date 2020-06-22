@@ -1,1 +1,1 @@
-web: node index.js
+web: sudo npm install -g node-gyp node-pre-gyp

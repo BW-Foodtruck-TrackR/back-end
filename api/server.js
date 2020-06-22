@@ -3,12 +3,11 @@ const helmet = require("helmet");
 const cors = require("cors");
 const session = require("express-session");
 const KnexSessionsStore = require("connect-session-knex")(session);
-
 const server = express();
-server.use(helmet());
-server.use(express.json());
-server.use(cors());
 
+const dbConnection = require("../data/connection");
+const usersRouter = require("./usersRouter/usersRouter");
+const authRouter = require("./auth/authRouter.js");
 const sessionConfig = {
     name: "monster",
     secret: process.env.SESSION_SECRET || "keep it secret, keep it safe!",
@@ -27,11 +26,13 @@ const sessionConfig = {
     }),
 };
 
+server.use(helmet());
+server.use(express.json());
+server.use(cors());
 server.use(session(sessionConfig));
 
-const usersRouter = require("./usersRouter/usersRouter");
-
 server.use("/api/users", usersRouter);
+server.use("/api/auth", authRouter);
 
 server.get("/", (req, res) => {
     res.status(200).json({

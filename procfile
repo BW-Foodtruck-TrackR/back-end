@@ -1,1 +1,1 @@
-web: sudo npm install -g node-gyp node-pre-gyp
+web: sudo npm install bcrypt

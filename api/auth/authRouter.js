@@ -22,7 +22,7 @@ router.post("/login", (req, res) => {
     const { username, password } = req.body;
 
     //  verify user password
-    Users.findByUser({ username })
+    db.findByUser({ username })
         .then(([user]) => {
             console.log(user);
             req.session.user = { user };

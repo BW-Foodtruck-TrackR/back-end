@@ -16,13 +16,21 @@ module.exports = {
         seeds: {
             directory: "./data/seeds",
         },
-        // add the following
-        // pool: {
-        //     afterCreate: (conn, done) => {
-        //         // runs after a connection is made to the sqlite engine
-        //         conn.run("PRAGMA foreign_keys = ON", done); // turn on FK enforcement
-        //     },
-        // },
+    },
+    testing: {
+        client: "pg",
+        connection: {
+            host: "localhost",
+            database: "foodTruck",
+            user: "postgres",
+            password: "tH3w3Bc0D!ngP@s5c0D3",
+        },
+        migrations: {
+            directory: "./data/migrations",
+        },
+        seeds: {
+            directory: "./data/seeds",
+        },
     },
 
     staging: {

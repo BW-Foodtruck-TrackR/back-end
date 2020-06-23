@@ -7,7 +7,7 @@ exports.up = function (knex) {
         .createTable("truckCurrentLocation", (tbl) => {
             tbl.increments();
             tbl.time("departureTime").notNullable().index();
-            tbl.string("location", 256).notNullable().index();
+            tbl.string("currentLocation", 256).notNullable().index();
         })
         .createTable("menu", (tbl) => {
             tbl.increments();

@@ -9,11 +9,6 @@ exports.up = function (knex) {
             .references("menu.id")
             .onDelete("RESTRICT")
             .onUpdate("CASCADE");
-        tbl.integer("currentLocation")
-            .unsigned()
-            .references("truckCurrentLocation.id")
-            .onDelete("RESTRICT")
-            .onUpdate("CASCADE");
     });
 };
 

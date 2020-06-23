@@ -7,18 +7,21 @@ exports.seed = function (knex) {
             return knex("truckCurrentLocation").insert([
                 {
                     departureTime: "19:30:00",
-                    location: "Main St.",
+                    currentLocation: "Main St.",
                     truckID: 1,
+                    date: "2020-06-30",
                 },
                 {
                     departureTime: "20:00:00",
-                    location: "South Main St.",
+                    currentLocation: "South Main St.",
                     truckID: 2,
+                    date: "2020-06-30",
                 },
                 {
                     departureTime: "16:00:00",
-                    location: "Main St.",
+                    currentLocation: "Main St.",
                     truckID: 3,
+                    date: "2020-06-30",
                 },
             ]);
         });

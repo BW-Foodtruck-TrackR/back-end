@@ -10,7 +10,11 @@ module.exports = {
 };
 
 function getTrucks() {
-    return db("trucks");
+    return db("trucks").join(
+        "truckCurrentLocation",
+        "trucks.id",
+        "truckCurrentLocation.truckID"
+    );
 }
 
 function findTruck() {
@@ -18,7 +22,14 @@ function findTruck() {
 }
 
 function findByTruck(filter) {
-    return db("trucks").where(filter).orderBy("id");
+    return db("trucks")
+        .where(filter)
+        .orderBy("id")
+        .join(
+            "truckCurrentLocation",
+            "trucks.id",
+            "truckCurrentLocation.truckID"
+        );
 }
 
 async function addTruck(truck) {

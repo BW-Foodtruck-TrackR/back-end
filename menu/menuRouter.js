@@ -27,14 +27,13 @@ router.get("/:id", (req, res) => {
 router.put("/:id", (req, res) => {
     const { id } = req.params;
     const changes = req.body;
-
     db.findByMenuItemId(id)
         .then((scheme) => {
             if (scheme) {
                 db.updateMenuItem(changes, req.params.id).then(
                     (updatedMenuItem) => {
                         res.json({
-                            updatedMenuItem: `ID ${id}, is now known as '${changes}'`,
+                            updatedMenuItem: `ID ${id}, is now known as '${changes.itemName}'`,
                         });
                     }
                 );
@@ -48,4 +47,20 @@ router.put("/:id", (req, res) => {
             res.status(500).json({ message: "Failed to update menu item" });
         });
 });
+router.delete("/:id", (req, res) => {
+    const { id } = req.params;
+
+    Trucks.removeMenuItem(id)
+        .then((delitem) => {
+            console.log(delitem);
+            if (delitem > 0) {
+                res.status(200).json({ Deleted: `${delitem} item deleted` });
+            } else if (delitem === 0)
+                res.status(404).json({ error: "Item is not in database" });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+});
+
 module.exports = router;

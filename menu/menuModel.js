@@ -4,6 +4,7 @@ module.exports = {
     findByMenuItemId,
     updateMenuItem,
     addMenuItem,
+    removeMenuItem,
 };
 
 function getMenuItems() {

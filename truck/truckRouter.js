@@ -8,7 +8,23 @@ router.get("/", (req, res) => {
         res.status(200).json(truckeroos);
     });
 });
-
+router.get("/:id", (req, res) => {
+    return db
+        .findByTruckId(req.params.id)
+        .then((truck) => {
+            if (truck) {
+                res.status(200).json(truck);
+            } else {
+                res.status(404).json({
+                    message: "Could not find menuItem with given id.",
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: "Failed to get the menu item." });
+        });
+});
 router.post("/", (req, res) => {
     return Trucks.addTruck(req.body)
         .then((newTruck) => {

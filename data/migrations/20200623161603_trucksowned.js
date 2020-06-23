@@ -1,6 +1,6 @@
 exports.up = function (knex) {
     return knex.schema.table("truckCurrentLocation", (tbl) => {
-        tbl.date("date").notNullable();
+        tbl.date("departureDate").notNullable();
         tbl.integer("truckID")
             .unsigned()
             .references("trucks.id")

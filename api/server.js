@@ -9,6 +9,8 @@ const dbConnection = require("../data/connection");
 const usersRouter = require("../users/usersRouter");
 const authRouter = require("../auth/authRouter");
 const truckRouter = require("../truck/truckRouter");
+const menuRouter = require("../menu/menuRouter");
+
 const sessionConfig = {
     name: "monster",
     secret: process.env.SESSION_SECRET || "keep it secret, keep it safe!",
@@ -35,6 +37,7 @@ server.use(session(sessionConfig));
 server.use("/api/users", usersRouter);
 server.use("/api/auth", authRouter);
 server.use("/api/trucks", truckRouter);
+server.use("/api/menu", menuRouter);
 
 server.get("/", (req, res) => {
     res.status(200).json({

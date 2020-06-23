@@ -5,6 +5,8 @@ module.exports = {
     findByTruck,
     addTruck,
     findByTruckId,
+    updateTruck,
+    removeTruck,
 };
 
 function getTrucks() {
@@ -31,4 +33,11 @@ async function addTruck(truck) {
 
 function findByTruckId(id) {
     return db("trucks").where({ id }).first();
+}
+
+function updateTruck(changes, id) {
+    return db("trucks").where({ id }).first().update(changes);
+}
+function removeTruck(id) {
+    return db("trucks").where({ id }).first().del();
 }

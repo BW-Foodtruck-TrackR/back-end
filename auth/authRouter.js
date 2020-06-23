@@ -7,17 +7,17 @@ const db = require("../allModel/allModel");
 
 function isValid(user) {
     return Boolean(
-        user.username && user.password && typeof user.password === "string"
+        user.email && user.password && typeof user.password === "string"
     );
 }
 
 router.post("/register", (req, res) => {
-    const { username, password, userType } = req.body;
+    const { username, password, userType, email } = req.body;
 
     //  hash user password
     const rounds = process.env.HASH_ROUNDS || 8;
     const hash = bcryptjs.hashSync(password, rounds);
-    db.addUser({ username, password: hash, userType })
+    db.addUser({ username, password: hash, userType, email })
         .then((users) => {
             res.status(200).json(users);
         })
@@ -25,13 +25,12 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-    const { username, password } = req.body;
-    console.log(username);
+    const { email, password } = req.body;
+    console.log(email);
     if (isValid(req.body)) {
-        db.findByUser({ username })
+        db.findByUser(email)
             .then(([user]) => {
                 // compare the password the hash stored in the database
-                console.log(user);
                 if (user && bcryptjs.compareSync(password, user.password)) {
                     const token = createToken(user);
 
@@ -50,8 +49,7 @@ router.post("/login", (req, res) => {
             });
     } else {
         res.status(400).json({
-            message:
-                "please provide username and password and the password shoud be alphanumeric",
+            message: "please provide username and password.",
         });
     }
 });

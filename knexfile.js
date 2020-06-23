@@ -8,7 +8,7 @@ module.exports = {
             host: "localhost",
             database: "foodTruck",
             user: "postgres",
-            password: process.env.PASSWORD,
+            password: "tH3w3Bc0D!ngP@s5c0D3",
         },
         migrations: {
             directory: "./data/migrations",

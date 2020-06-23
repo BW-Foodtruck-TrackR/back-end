@@ -58,6 +58,7 @@ router.post("/login", (req, res) => {
 
 router.get("/logout", (req, res) => {
     if (req.session) {
+        cookie = {};
         req.session.destroy((err) => {
             if (err) {
                 console.log(err);

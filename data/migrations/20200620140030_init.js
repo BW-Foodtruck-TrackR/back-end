@@ -4,6 +4,16 @@ exports.up = function (knex) {
             tbl.increments();
             tbl.integer("userType").notNullable();
         })
+        .createTable("TruckOperators", (tbl) => {
+            tbl.increments();
+            tbl.string("username", 128).notNullable().unique().index();
+            tbl.string("password", 256).notNullable();
+            tbl.integer("userOrOperator")
+                .unsigned()
+                .references("userType.id")
+                .onDelete("RESTRICT")
+                .onUpdate("CASCADE");
+        })
         .createTable("Users", (tbl) => {
             tbl.increments();
             tbl.string("username", 128).notNullable().unique().index();
@@ -25,28 +35,12 @@ exports.up = function (knex) {
                 .references("TruckOperators.id")
                 .onDelete("RESTRICT")
                 .onUpdate("CASCADE");
-        })
-        .createTable("TruckOperators", (tbl) => {
-            tbl.increments();
-            tbl.string("username", 128).notNullable().unique().index();
-            tbl.string("password", 256).notNullable();
-            tbl.string("trucksOwned")
-                .index()
-                .unsigned()
-                .references("TruckOperators.id")
-                .onDelete("RESTRICT")
-                .onUpdate("CASCADE");
-            tbl.integer("userOrOperator")
-                .unsigned()
-                .references("userType.id")
-                .onDelete("RESTRICT")
-                .onUpdate("CASCADE");
         });
 };
 
 exports.down = function (knex) {
     return knex.schema
-        .dropTableIfExists("TruckOperators")
         .dropTableIfExists("Users")
+        .dropTableIfExists("TruckOperators")
         .dropTableIfExists("userType");
 };

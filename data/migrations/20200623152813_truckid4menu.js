@@ -9,5 +9,7 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-    knex.schema.dropColumn("menu.truckID");
+    return knex.schema.table("menu", (tbl) => {
+        tbl.dropColumn("truckID");
+    });
 };

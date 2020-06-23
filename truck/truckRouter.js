@@ -9,8 +9,7 @@ router.get("/", (req, res) => {
     });
 });
 router.get("/:id", (req, res) => {
-    return db
-        .findByTruckId(req.params.id)
+    return Trucks.findByTruckId(req.params.id)
         .then((truck) => {
             if (truck) {
                 res.status(200).json(truck);

@@ -1,6 +1,9 @@
 const db = require("../data/connection");
 module.exports = {
     getMenuItems,
+    findByMenuItemId,
+    updateMenuItem,
+    addMenuItem,
 };
 
 function getMenuItems() {
@@ -25,9 +28,9 @@ function findByMenuItem(filter) {
     return db("menu").where(filter).orderBy("id");
 }
 
-async function addMenuItem(truck) {
+async function addMenuItem(menuItem) {
     try {
-        const [id] = await db("menu").insert(truck, "id");
+        const [id] = await db("menu").insert(menuItem, "id");
 
         return findByMenuItemId(id);
     } catch (error) {

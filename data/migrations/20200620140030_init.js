@@ -29,12 +29,6 @@ exports.up = function (knex) {
                 .references("TruckOperators.id")
                 .onDelete("RESTRICT")
                 .onUpdate("CASCADE");
-            tbl.string("trucksOwned")
-                .index()
-                .unsigned()
-                .references("TruckOperators.id")
-                .onDelete("RESTRICT")
-                .onUpdate("CASCADE");
         });
 };
 

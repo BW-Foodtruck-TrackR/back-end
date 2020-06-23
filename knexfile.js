@@ -3,24 +3,29 @@ require("dotenv").config();
 const pgConnection = process.env.DATABASE_URL;
 module.exports = {
     development: {
-        client: "sqlite3",
+        client: "pg",
         useNullAsDefault: true, // needed for sqlite
         connection: {
-            filename: "./data/foodTruckDev.db3",
+            filename: {
+                connectionString: `postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
+                ssl: { rejectUnauthorized: false },
+            },
         },
+        searchPath: ["foodTruck", "public"],
+        options: { schema: "foodTruck" },
+        pool: { min: 0, max: 7 },
         migrations: {
             directory: "./data/migrations",
         },
         seeds: {
             directory: "./data/seeds",
         },
-        // add the following
-        // pool: {
-        //     afterCreate: (conn, done) => {
-        //         // runs after a connection is made to the sqlite engine
-        //         conn.run("PRAGMA foreign_keys = ON", done); // turn on FK enforcement
-        //     },
-        // },
+        pool: {
+            afterCreate: (conn, done) => {
+                // runs after a connection is made to the sqlite engine
+                conn.run("PRAGMA foreign_keys = ON", done); // turn on FK enforcement
+            },
+        },
     },
 
     testing: {

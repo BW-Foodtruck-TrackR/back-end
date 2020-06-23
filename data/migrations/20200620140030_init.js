@@ -24,11 +24,6 @@ exports.up = function (knex) {
                 .references("userType.id")
                 .onDelete("RESTRICT")
                 .onUpdate("CASCADE");
-            tbl.integer("favoriteTrucks")
-                .unsigned()
-                .references("TruckOperators.id")
-                .onDelete("RESTRICT")
-                .onUpdate("CASCADE");
         });
 };
 

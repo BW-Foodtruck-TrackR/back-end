@@ -1,4 +1,1 @@
-web: sudo npm install bcrypt
-web: knex migrate:latest
-web: knex migrate:rollback
-web: knex seed:run
+web:npm node index.js

@@ -22,7 +22,7 @@ const sessionConfig = {
         knex: dbConnection,
         sidfieldname: "sid",
         createtable: true,
-        clearInterval: 6000, //  delete expired sessions - in milliseconds
+        clearInterval: 30000, //  delete expired sessions - in milliseconds
     }),
 };
 

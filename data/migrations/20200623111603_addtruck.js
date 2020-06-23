@@ -2,9 +2,9 @@ exports.up = function (knex) {
     return knex.schema.createTable("trucks", (tbl) => {
         tbl.increments();
         tbl.string("truckName", 128).notNullable();
-        tbl.float("image");
+        tbl.string("image");
         tbl.string("cuisineType", 128).notNullable();
-        tbl.integer("menuItem")
+        tbl.integer("menuItems")
             .unsigned()
             .references("menu.id")
             .onDelete("RESTRICT")

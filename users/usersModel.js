@@ -5,10 +5,22 @@ module.exports = {
     findByUser,
     addUser,
     findByUserId,
+    getOperators,
+    getConsumers,
 };
 
 function getUsers() {
-    return db("users");
+    return db("users").join("userType", "users.userType", "userType.id");
+}
+function getOperators() {
+    return db("users")
+        .join("userType", "users.userType", "userType.id")
+        .where("users.userType", "2");
+}
+function getConsumers() {
+    return db("users")
+        .join("userType", "users.userType", "userType.id")
+        .where("users.userType", "1");
 }
 
 function findUser() {

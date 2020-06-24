@@ -15,20 +15,27 @@ router.get("/:id", (req, res) => {
                 res.status(200).json(truck);
             } else {
                 res.status(404).json({
-                    message: "Could not find menuItem with given id.",
+                    message: "Could not find truck with given id.",
                 });
             }
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).json({ error: "Failed to get the menu item." });
+            res.status(500).json({ error: "Failed to get the truck." });
         });
 });
 router.post("/", (req, res) => {
     return Trucks.addTruck(req.body)
         .then((newTruck) => {
             console.log(newTruck);
-            res.status(201).json(newTruck);
+            if (newTruck) {
+                res.status(201).json(newTruck);
+            } else {
+                res.status(500).json({
+                    error:
+                        "Failed to create new truck. Truck name is already in use.",
+                });
+            }
         })
         .catch((err) => {
             res.status(500).json({ message: "Failed to create new truck" });

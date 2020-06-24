@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express();
+const tokenRequired = require("../auth/tokenRequired");
+const db = require("./usersModel");
 
-const db = require("../allModel/allModel");
-
-router.get("/", (req, res) => {
+router.get("/", tokenRequired, (req, res) => {
     return db.getUsers().then((users) => {
         console.log(users);
         res.status(200).json(users);

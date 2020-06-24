@@ -10,11 +10,13 @@ module.exports = {
 };
 
 function getTrucks() {
-    return db("trucks").join(
-        "truckCurrentLocation",
-        "trucks.id",
-        "truckCurrentLocation.truckID"
-    );
+    return db("trucks")
+        .join(
+            "truckCurrentLocation",
+            "trucks.id",
+            "truckCurrentLocation.truckID"
+        )
+        .orderBy("trucks.id");
 }
 
 function findTruck() {
@@ -41,9 +43,21 @@ async function addTruck(truck) {
         throw error;
     }
 }
+function addTruckETA(eta, id) {
+    findByTruckId(id);
+}
 
 function findByTruckId(id) {
-    return db("trucks").where({ id }).first();
+    return (
+        db("trucks")
+            // .join(
+            //     "truckCurrentLocation",
+            //     "trucks.id",
+            //     "truckCurrentLocation.truckID"
+            // )
+            .where({ "trucks.id": id })
+            .first()
+    );
 }
 
 function updateTruck(changes, id) {

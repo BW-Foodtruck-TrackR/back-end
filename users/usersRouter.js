@@ -21,5 +21,16 @@ router.get("/users", tokenRequired, (req, res) => {
         res.status(200).json(users);
     });
 });
-
+router.get("/:id", tokenRequired, (req, res) => {
+    const id = req.params.id;
+    return db
+        .findByUserId(id)
+        .then((user) => {
+            console.log(user);
+            res.status(200).json(user);
+        })
+        .catch((err) => {
+            res.status(500).json(err);
+        });
+});
 module.exports = router;

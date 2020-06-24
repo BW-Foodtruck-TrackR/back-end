@@ -42,5 +42,8 @@ async function addUser(user) {
 }
 
 function findByUserId(id) {
-    return db("users").where({ id }).first();
+    return db("users")
+        .join("userType", "users.userType", "userType.id")
+        .where("users.id", id)
+        .first();
 }

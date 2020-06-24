@@ -19,7 +19,7 @@ exports.seed = function (knex) {
                 },
                 {
                     itemName: "chicken taco",
-                    description: "chicken taco meat in taco shell",
+                    description: "chicken meat in taco shell",
                     price: 1.5,
                     truckID: 1,
                 },

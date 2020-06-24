@@ -3,7 +3,8 @@ const bcryptjs = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const randomConsts = require("../config/randomConsts");
 
-const db = require("../allModel/allModel");
+const db = require("../users/usersModel");
+const tokenRequired = require("./tokenRequired");
 
 function isValid(user) {
     return Boolean(
@@ -54,7 +55,7 @@ router.post("/login", (req, res) => {
     }
 });
 
-router.get("/logout", (req, res) => {
+router.get("/logout", tokenRequired, (req, res) => {
     if (req.session) {
         cookie = {};
         req.session.destroy((err) => {

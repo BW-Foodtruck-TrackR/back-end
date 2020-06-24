@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const tokenRequired = require("../auth/tokenRequired");
 
 const Trucks = require("./trucksModel");
 
@@ -24,7 +25,7 @@ router.get("/:id", (req, res) => {
             res.status(500).json({ error: "Failed to get the truck." });
         });
 });
-router.post("/", (req, res) => {
+router.post("/", tokenRequired, (req, res) => {
     return Trucks.addTruck(req.body)
         .then((newTruck) => {
             console.log(newTruck);
@@ -42,7 +43,7 @@ router.post("/", (req, res) => {
         });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", tokenRequired, (req, res) => {
     const { id } = req.params;
     const changes = req.body;
     console.log(id, changes);
@@ -67,7 +68,7 @@ router.put("/:id", (req, res) => {
         });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", tokenRequired, (req, res) => {
     const { id } = req.params;
 
     Trucks.removeTruck(id)

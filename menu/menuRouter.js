@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express();
 const db = require("./menuModel");
+const tokenRequired = require("../auth/tokenRequired");
+
 router.get("/", (req, res) => {
     return db.getMenuItems().then((food) => {
         console.log(food);
@@ -24,7 +26,7 @@ router.get("/:id", (req, res) => {
             res.status(500).json({ error: "Failed to get the menu item." });
         });
 });
-router.put("/:id", (req, res) => {
+router.put("/:id", tokenRequired, (req, res) => {
     const { id } = req.params;
     const changes = req.body;
     db.findByMenuItemId(id)
@@ -47,7 +49,7 @@ router.put("/:id", (req, res) => {
             res.status(500).json({ message: "Failed to update menu item" });
         });
 });
-router.delete("/:id", (req, res) => {
+router.delete("/:id", tokenRequired, (req, res) => {
     const { id } = req.params;
 
     Trucks.removeMenuItem(id)

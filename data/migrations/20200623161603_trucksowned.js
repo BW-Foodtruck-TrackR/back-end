@@ -12,6 +12,6 @@ exports.up = function (knex) {
 exports.down = function (knex) {
     return knex.schema.table("truckCurrentLocation", (tbl) => {
         tbl.dropColumn("truckID");
-        tbl.dropColumn("date");
+        tbl.dropColumn("departureDate");
     });
 };

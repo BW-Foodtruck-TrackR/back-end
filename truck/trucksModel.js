@@ -7,6 +7,7 @@ module.exports = {
     findByTruckId,
     updateTruck,
     removeTruck,
+    getRatings,
 };
 
 function getTrucks() {
@@ -17,6 +18,13 @@ function getTrucks() {
             "truckCurrentLocation.truckID"
         )
         .orderBy("trucks.id");
+}
+function getRatings() {
+    return db("truckRatings").join(
+        "trucks",
+        "truckRatings.truckID",
+        "trucks.id"
+    );
 }
 
 function findTruck() {

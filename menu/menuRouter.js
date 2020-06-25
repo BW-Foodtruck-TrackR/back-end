@@ -9,6 +9,17 @@ router.get("/", (req, res) => {
         res.status(200).json(food);
     });
 });
+router.get("/ratings", tokenRequired, (req, res) => {
+    db.getRatings()
+        .then((menuRatings) => {
+            console.log(menuRatings);
+            res.status(200).json(menuRatings);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+});
 router.get("/:id", (req, res) => {
     return db
         .findByMenuItemId(req.params.id)
@@ -52,7 +63,7 @@ router.put("/:id", tokenRequired, (req, res) => {
 router.delete("/:id", tokenRequired, (req, res) => {
     const { id } = req.params;
 
-    Trucks.removeMenuItem(id)
+    db.removeMenuItem(id)
         .then((delitem) => {
             console.log(delitem);
             if (delitem > 0) {

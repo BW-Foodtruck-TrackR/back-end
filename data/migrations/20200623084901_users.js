@@ -9,6 +9,7 @@ exports.up = function (knex) {
             .references("userType.id")
             .onDelete("RESTRICT")
             .onUpdate("CASCADE");
+        tbl.string("currentLoaction");
     });
 };
 

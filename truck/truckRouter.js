@@ -9,6 +9,17 @@ router.get("/", (req, res) => {
         res.status(200).json(truckeroos);
     });
 });
+router.get("/ratings", tokenRequired, (req, res) => {
+    Trucks.getRatings()
+        .then((truckRatings) => {
+            console.log(truckRatings);
+            res.status(200).json(truckRatings);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+});
 router.get("/:id", (req, res) => {
     return Trucks.findByTruckId(req.params.id)
         .then((truck) => {

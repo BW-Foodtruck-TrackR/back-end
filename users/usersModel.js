@@ -7,6 +7,10 @@ module.exports = {
     findByUserId,
     getOperators,
     getConsumers,
+    getFavoriteTrucks,
+    getOwnedTrucks,
+    getUsersFavoriteTrucks,
+    getOperatorsOwnedTrucks,
 };
 
 function getUsers() {
@@ -46,4 +50,31 @@ function findByUserId(id) {
         .join("userType", "users.userType", "userType.id")
         .where("users.id", id)
         .first();
+}
+
+function getFavoriteTrucks() {
+    return db("favoriteTrucks")
+        .join("users", "favoriteTrucks.userID", "users.id")
+        .join("trucks", "favoriteTrucks.truckID", "trucks.id")
+        .join("userType", "users.userType", "userType.id");
+}
+function getOwnedTrucks() {
+    return db("trucksOwned")
+        .join("users", "trucksOwned.userID", "users.id")
+        .join("trucks", "trucksOwned.truckID", "trucks.id")
+        .join("userType", "users.userType", "userType.id");
+}
+function getUsersFavoriteTrucks(id) {
+    return db("favoriteTrucks")
+        .where("users.id", id)
+        .join("users", "favoriteTrucks.userID", "users.id")
+        .join("trucks", "favoriteTrucks.truckID", "trucks.id")
+        .join("userType", "users.userType", "userType.id");
+}
+function getOperatorsOwnedTrucks(id) {
+    return db("trucksOwned")
+        .where("users.id", id)
+        .join("users", "trucksOwned.userID", "users.id")
+        .join("trucks", "trucksOwned.truckID", "trucks.id")
+        .join("userType", "users.userType", "userType.id");
 }

@@ -5,6 +5,7 @@ module.exports = {
     updateMenuItem,
     addMenuItem,
     removeMenuItem,
+    getRatings,
 };
 
 function getMenuItems() {
@@ -48,4 +49,8 @@ function updateMenuItem(changes, id) {
 }
 function removeMenuItem(id) {
     return db("menu").where({ id }).first().del();
+}
+
+function getRatings() {
+    return db("foodRatings").join("menu", "foodRatings.menuID", "menu.id");
 }

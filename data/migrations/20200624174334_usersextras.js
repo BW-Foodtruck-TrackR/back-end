@@ -1,8 +1,5 @@
 exports.up = function (knex) {
     return knex.schema
-        .table("users", (tbl) => {
-            tbl.string("currentLocation");
-        })
         .createTable("favoriteTrucks", (tbl) => {
             tbl.increments();
             tbl.integer("truckID")
@@ -34,8 +31,5 @@ exports.up = function (knex) {
 exports.down = function (knex) {
     return knex.schema
         .dropTableIfExists("trucksOwned")
-        .dropTableIfExists("favoriteTrucks")
-        .table("users", (tbl) => {
-            tbl.dropColumn("currentLocation");
-        });
+        .dropTableIfExists("favoriteTrucks");
 };

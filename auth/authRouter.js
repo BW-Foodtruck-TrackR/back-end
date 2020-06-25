@@ -50,7 +50,7 @@ router.post("/login", (req, res) => {
             });
     } else {
         res.status(400).json({
-            message: "please provide username and password.",
+            message: "please provide email and password.",
         });
     }
 });
@@ -78,7 +78,7 @@ function createToken(user) {
     };
     const secret = randomConsts.jwtSecret;
     const options = {
-        expiresIn: "30m",
+        expiresIn: "4h",
     };
     return jwt.sign(payload, secret, options);
 }

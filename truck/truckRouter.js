@@ -3,7 +3,7 @@ const tokenRequired = require("../auth/tokenRequired");
 
 const Trucks = require("./trucksModel");
 
-router.get("/", (req, res) => {
+router.get("/", tokenRequired, (req, res) => {
     return Trucks.getTrucks().then((truckeroos) => {
         console.log(truckeroos);
         res.status(200).json(truckeroos);

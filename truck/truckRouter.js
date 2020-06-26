@@ -3,19 +3,42 @@ const tokenRequired = require("../auth/tokenRequired");
 
 const Trucks = require("./trucksModel");
 
+// router.get("/", (req, res) => {
+//     return Trucks.getTrucks(filter).then((truckeroos) => {
+//         res.status(200).json(truckeroos);
+//     });
+// });
 router.get("/", (req, res) => {
-    return Trucks.getTrucks().then((truckeroos) => {
-        res.status(200).json(truckeroos);
-    });
-});
-router.get("/ratings", tokenRequired, (req, res) => {
-    Trucks.getRatings()
-        .then((truckRatings) => {
-            res.status(200).json(truckRatings);
-        })
-        .catch((err) => {
-            res.status(500).json(err);
+    const filter = req.query.filter;
+
+    console.log(filter);
+    if (filter === undefined) {
+        return Trucks.getTrucks(filter).then((truckeroos) => {
+            res.status(200).json(truckeroos);
         });
+    } else {
+        return Trucks.findCuisineType(filter).then((truckeroos) => {
+            res.status(200).json(truckeroos);
+        });
+    }
+});
+
+router.get("/ratings", tokenRequired, (req, res) => {
+    const findRating = req.query.filter;
+    console.log(findRating);
+    if (findRating === undefined) {
+        Trucks.getRatings().then((truckRatings) => {
+            res.status(200)
+                .json(truckRatings)
+                .catch((err) => {
+                    res.status(500).json(err);
+                });
+        });
+    } else {
+        Trucks.getHigherRatings(findRating).then((response) => {
+            res.status(200).json(response);
+        });
+    }
 });
 router.get("/:id", (req, res) => {
     return Trucks.findByTruckId(req.params.id)

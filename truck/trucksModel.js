@@ -8,6 +8,8 @@ module.exports = {
     updateTruck,
     removeTruck,
     getRatings,
+    findCuisineType,
+    getHigherRatings,
 };
 
 function getTrucks() {
@@ -20,15 +22,24 @@ function getTrucks() {
         .orderBy("trucks.id");
 }
 function getRatings() {
-    return db("truckRatings").join(
-        "trucks",
-        "truckRatings.truckID",
-        "trucks.id"
+    return db("truckRatings")
+        .join("trucks", "truckRatings.truckID", "trucks.id")
+        .orderBy("rating", "DESC");
+}
+function getHigherRatings(number) {
+    return (
+        db("truckRatings")
+            .where("rating", ">=", number)
+            // .join("trucks", "truckRatings.truckID", "trucks.id")
+            .orderBy("rating", "DESC")
     );
 }
 
 function findTruck() {
     return db("trucks").select("id", "truckName").orderBy("id");
+}
+function findCuisineType(filter) {
+    return db("trucks").where({ cuisineType: filter });
 }
 
 function findByTruck(filter) {
@@ -50,9 +61,6 @@ async function addTruck(truck) {
     } catch (error) {
         throw error;
     }
-}
-function addTruckETA(eta, id) {
-    findByTruckId(id);
 }
 
 function findByTruckId(id) {

@@ -35,10 +35,13 @@ router.get("/:id", (req, res) => {
 router.post("/", tokenRequired, (req, res) => {
     return Trucks.addTruck(req.body)
         .then((newTruck) => {
-            if (!newTruck) {
+            if (
+                !req.body.truckName ||
+                !req.body.cuisineType ||
+                !req.body.image
+            ) {
                 res.status(500).json({
-                    error:
-                        "Failed to create new truck. Truck name is already in use.",
+                    error: "Failed to create new truck, missing form data.",
                     newTruck,
                 });
             } else {
@@ -77,20 +80,26 @@ router.put("/:id", tokenRequired, (req, res) => {
 
 router.delete("/:id", tokenRequired, (req, res) => {
     const { id } = req.params;
-
-    Trucks.removeTruck(id)
-        .then((delitem) => {
-            if (delitem > 0) {
-                res.status(202).json({ Deleted: `${delitem} item deleted` });
-            } else if (delitem === 0)
-                res.status(404).json({ error: "Item is not in database" });
-        })
-        .catch((err) => {
-            res.status(500).json({
-                error:
-                    "Could not establish a connection to the database to delete this item.",
+    Trucks.findByTruckId(id).then((truck) => {
+        if (truck) {
+            Trucks.removeTruck(id)
+                .then((delitem) => {
+                    res.status(202).json({
+                        Deleted: `${delitem} item deleted`,
+                    });
+                })
+                .catch((err) => {
+                    res.status(500).json({
+                        error:
+                            "Could not establish a connection to the database to delete this item.",
+                    });
+                });
+        } else {
+            res.status(404).json({
+                message: "Could not find truck with given id.",
             });
-        });
+        }
+    });
 });
 
 module.exports = router;

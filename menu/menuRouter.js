@@ -37,8 +37,8 @@ router.put("/:id", tokenRequired, (req, res) => {
     const { id } = req.params;
     const changes = req.body;
     db.findByMenuItemId(id)
-        .then((scheme) => {
-            if (scheme) {
+        .then((menuItem) => {
+            if (menuItem) {
                 db.updateMenuItem(changes, req.params.id).then(
                     (updatedMenuItem) => {
                         res.status(201).json({
@@ -56,6 +56,31 @@ router.put("/:id", tokenRequired, (req, res) => {
             res.status(500).json({ message: "Failed to update menu item" });
         });
 });
+router.post("/", tokenRequired, (req, res) => {
+    return db
+        .addMenuItem(req.body)
+        .then((newMenuItem) => {
+            if (
+                !req.body.price ||
+                !req.body.description ||
+                !req.body.itemName
+            ) {
+                res.status(500).json({
+                    error: "Failed to create new menu item, missing form data.",
+                    newMenuItem,
+                });
+            } else {
+                res.status(201).json(newMenuItem);
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: "Failed to create new truck",
+                err,
+            });
+        });
+});
+
 router.delete("/:id", tokenRequired, (req, res) => {
     const { id } = req.params;
 

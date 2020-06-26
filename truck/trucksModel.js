@@ -56,16 +56,14 @@ function addTruckETA(eta, id) {
 }
 
 function findByTruckId(id) {
-    return (
-        db("trucks")
-            // .join(
-            //     "truckCurrentLocation",
-            //     "trucks.id",
-            //     "truckCurrentLocation.truckID"
-            // )
-            .where({ "trucks.id": id })
-            .first()
-    );
+    return db("trucks")
+        .join(
+            "truckCurrentLocation",
+            "trucks.id",
+            "truckCurrentLocation.truckID"
+        )
+        .where({ "trucks.id": id })
+        .first();
 }
 
 function updateTruck(changes, id) {

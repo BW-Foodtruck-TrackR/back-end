@@ -5,18 +5,15 @@ const tokenRequired = require("../auth/tokenRequired");
 
 router.get("/", (req, res) => {
     return db.getMenuItems().then((food) => {
-        console.log(food);
         res.status(200).json(food);
     });
 });
 router.get("/ratings", tokenRequired, (req, res) => {
     db.getRatings()
         .then((menuRatings) => {
-            console.log(menuRatings);
             res.status(200).json(menuRatings);
         })
         .catch((err) => {
-            console.log(err);
             res.status(500).json(err);
         });
 });
@@ -33,7 +30,6 @@ router.get("/:id", (req, res) => {
             }
         })
         .catch((err) => {
-            console.log(err);
             res.status(500).json({ error: "Failed to get the menu item." });
         });
 });
@@ -45,7 +41,7 @@ router.put("/:id", tokenRequired, (req, res) => {
             if (scheme) {
                 db.updateMenuItem(changes, req.params.id).then(
                     (updatedMenuItem) => {
-                        res.json({
+                        res.status(201).json({
                             updatedMenuItem: `ID ${id}, is now known as '${changes.itemName}'`,
                         });
                     }
@@ -65,14 +61,15 @@ router.delete("/:id", tokenRequired, (req, res) => {
 
     db.removeMenuItem(id)
         .then((delitem) => {
-            console.log(delitem);
             if (delitem > 0) {
-                res.status(200).json({ Deleted: `${delitem} item deleted` });
+                res.status(203).json({ Deleted: `${delitem} item deleted` });
             } else if (delitem === 0)
                 res.status(404).json({ error: "Item is not in database" });
         })
         .catch((err) => {
-            console.log(err);
+            res.status(500).json({
+                error: "Could not accomplish the connection to the database.",
+            });
         });
 });
 

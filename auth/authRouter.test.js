@@ -1,52 +1,98 @@
-const db = require("../data/connection");
+// /**
+//  * @jest-environment node
+//  */
+
 const supertest = require("supertest");
 const server = require("../api/server");
-const { isMainThread } = require("worker_threads");
 
-it("should user the testing environment", () => {
-    expect(process.env.NODE_ENV).toBe("testing");
-});
+const db = require("../data/connection");
 
-describe("GET / of server.js", () => {
-    // afterEach(async () => {
-    //     await db("users").truncate();
-    // });
+const user = {
+    id: 500,
+    username: "diner2",
+    password: "password",
+    userType: "1",
+    email: "email6@email.com",
+};
+const user2 = {
+    id: 501,
+    username: "operator",
+    password: "password",
+    userType: "2",
+    email: "email4@email.com",
+};
+userLogin = {
+    email: "email6@email.com",
+    password: "password",
+};
 
-    it("Should test the home slash of the server", async () => {
-        supertest(server)
-            .get("/")
-            .then((res) => {
-                expect(res.body).toStrictEqual({
-                    Message:
-                        "Congrats on loading up the home slash of the server. If you are a developer, you may be looking for /api/login",
-                });
-            });
+let token;
+afterAll(async () => {
+    await db("favoriteTrucks").truncate();
+    await db("trucksOwned").truncate();
+    beforeAll(async () => {
+        await db("favoriteTrucks").truncate();
+        await db("trucksOwned").truncate();
+
+        await supertest(server).post("/api/auth/register").send(user);
+
+        await supertest(server).post("/api/auth/login").send(userLogin);
+        // .then((response) => {
+        //     let token = response.body.token;
+        //     return token;
+        // });
+        // await supertest(server)
+        //     .post("/api/auth/register")
+        //     .send(user2)
+        //     .then((response) => {
+        //         expect(response.status).toBe(201);
+        //     });
     });
-});
-describe("POST /api/users/register", () => {
-    it("should not let you register without a username/password", async () => {
-        supertest(server)
-            .post("/api/auth/register")
-            .then((res) => {
-                expect(res.body).toStrictEqual({
-                    error: "Need username and password",
-                });
-                expect(res.body.error).toBe("Need username and password");
 
-                // expect(req.body).toBe({});
-            });
+    it("should user the testing environment", () => {
+        expect(process.env.NODE_ENV).toBe("testing");
     });
-    it("register, fails as its not running on node?", async () => {
-        await supertest(server)
-            .post("/api/users/register")
-            .send({ username: "testing", password: "password" });
-        let allThem = await supertest(server)
-            .get("/api/users")
-            .set(
-                "Authorization",
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoxLCJ1c2VybmFtZSI6Im5ldyIsImlhdCI6MTU5MjU5MzEyOCwiZXhwIjoxNTkyNjE0NzI4fQ.J7eg33ixSqb7dx82xfYRjNA13WonNAQFCWC4ja7BB6o"
-            );
 
-        expect(allThem.body).toStrictEqual([{ id: 1, username: "testing" }]);
+    describe("userrouter tests", () => {
+        it("can run tests", () => {
+            expect(true).toBeTruthy();
+        });
+    });
+
+    describe("post to api/auth/register", () => {
+        it("should not let you register without an email, username, userType, or password", () => {
+            supertest(server)
+                .post("/api/auth/register")
+                .then((res) => {
+                    expect(res.status).toBe(400);
+                });
+        });
+
+        it("should let you register with an email, username, userType, or password", () => {
+            supertest(server)
+                .post("/api/auth/register")
+                .send(user2)
+                .then((res) => {
+                    if (res.status === 500) {
+                    } else if (res.status === 201) {
+                        expect(res.status).toBe(201);
+                    }
+                });
+        });
+        it("should not let you login without an email or password", () => {
+            supertest(server)
+                .post("/api/auth/login")
+                .then((res) => {
+                    expect(res.status).toBe(400);
+                });
+        });
+        it("should let you login with an email or password", () => {
+            supertest(server)
+                .post("/api/auth/login")
+                .send(userLogin)
+                .then((res) => {
+                    expect(res.status).toBe(200);
+                });
+        });
     });
 });

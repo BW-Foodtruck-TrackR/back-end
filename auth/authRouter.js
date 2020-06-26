@@ -13,21 +13,32 @@ function isValid(user) {
 }
 
 router.post("/register", (req, res) => {
-    const { username, password, userType, email } = req.body;
-
     //  hash user password
-    const rounds = process.env.HASH_ROUNDS || 8;
-    const hash = bcryptjs.hashSync(password, rounds);
-    db.addUser({ username, password: hash, userType, email })
-        .then((users) => {
-            res.status(200).json(users);
-        })
-        .catch((err) => res.status(500).json({ error: err.detail, err }));
+    if (
+        !req.body.email ||
+        !req.body.password ||
+        !req.body.username ||
+        !req.body.userType
+    ) {
+        res.status(400).json({
+            error:
+                "Email, password, username, and user types are all required.",
+        });
+    } else {
+        const { username, userType, email } = req.body;
+        const rounds = process.env.HASH_ROUNDS || 8;
+        const hash = bcryptjs.hashSync(req.body.password, rounds);
+
+        db.addUser({ username, password: hash, userType, email })
+            .then((users) => {
+                res.status(201).json(users);
+            })
+            .catch((err) => res.status(500).json({ error: err.detail, err }));
+    }
 });
 
 router.post("/login", (req, res) => {
     const { email, password } = req.body;
-    console.log(email);
     if (isValid(req.body)) {
         db.findByUser(email)
             .then(([user]) => {
@@ -60,7 +71,6 @@ router.get("/logout", tokenRequired, (req, res) => {
         cookie = {};
         req.session.destroy((err) => {
             if (err) {
-                console.log(err);
                 res.status(500).json({
                     Error: "Could not log out, please try again...",
                 });
